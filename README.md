@@ -76,6 +76,12 @@ The SnakeMake pipeline relies on a configuration file in json format that specif
 
 **IMPORTANT**: the basename for each fastq file must be unique.
 
+To run the pipeline, you simply run snakemake with appropriate arguments indicating the name of the config file, location of the Snakefile, and number of cores. It is a good idea to wrap the command with nohup, and to redirect output to a log file, as shown in the example below. Note that the -p option to snakemake causes all shell commands to be printed as they are executed, which is useful for troubleshooting.
+
+```bash
+nohup snakemake -p --cores 8 --configfile snakemake_config.json --snakefile /path/to/Snakefile &> snakemake.nohup &
+```
+
 ### build_snakefile.sh
 To make the process of assembling library data into the JSON config file, we supply a shell script, build_snakefile.sh, which can be found in the scripts directory. This script is run as follows:
 
