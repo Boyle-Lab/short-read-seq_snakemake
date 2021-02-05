@@ -1,0 +1,26 @@
+{
+	"bwa_index": {
+		"mm10": "/path/to/index"
+	},
+	"results": "results",
+	"libraries": {
+		"WT_Sperm_IP_with_MS-H3k9me2#2": {
+			"genome": "mm10",
+			"readgroups": {
+				"1619-SS-16": [
+					"/data/projects/protamine/1619-SS/Fastq/1619-SS-16_CGGACAAC-AATCCGGA_S20_R1_001.fastq.gz",
+					"/data/projects/protamine/1619-SS/Fastq/1619-SS-16_CGGACAAC-AATCCGGA_S20_R2_001.fastq.gz"
+				]
+			}
+		},
+		"WT_Sperm_Input": {
+			"genome": "mm10",
+			"readgroups": {
+				"1619-SS-21": [
+					"/data/projects/protamine/1619-SS/Fastq/1619-SS-21_ATGGCATG-GGTACCTT_S26_R1_001.fastq.gz",
+					"/data/projects/protamine/1619-SS/Fastq/1619-SS-21_ATGGCATG-GGTACCTT_S26_R2_001.fastq.gz"
+				]
+			}
+		}
+	}
+}

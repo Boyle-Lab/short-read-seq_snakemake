@@ -13,7 +13,7 @@ This pipeline uses SnakeMake to automate processing of short-read sequencing dat
 
 The pipeline can be customized through the SnakeMake configuration file to apply to paired-end or single-end data, and to use any available genome assembly.
 
-## Requirements
+## Dependencies
 The pipeline requires the following software to be preinstalled:
 
 Python >=2.7, and the following software packages:
@@ -26,10 +26,12 @@ Python >=2.7, and the following software packages:
 6. Fseq2 (<https://github.com/Boyle-Lab/F-Seq2>)
 7. bedtools (<https://bedtools.readthedocs.io/en/latest/index.html>)
 
+We strongly recommend installing the required packages in an Anaconda environment using Python >=3.7.
+
 
 ## Running the Pipeline
 
-The SnakeMake pipeline relies on a configuration file in json format that specifies the source data and various run parameters, including the reference genome, blacklist (if any), etc. See the example below. Note that some sections are optional, and it is only necessary to provide one library, although multiple libraries may be included if desired.
+The SnakeMake pipeline relies on a configuration file in json format that specifies the source data and various run parameters, including the reference genome, blacklist (if any), etc. See the example below. Note that some sections are optional. Note that the pipeline expects fastq files for reads 1 and 2 to be designated with the _R1_001 and _R2_002 suffixes. This behavior can be modified by editing the wildcard values for the input and output specifications for the "trim" rule. 
 
 ```bash
 {
@@ -45,41 +47,49 @@ The SnakeMake pipeline relies on a configuration file in json format that specif
         "hg19": "/path/to/bwa/index/hg19",
         "mm9": "/path/to/bwa/index/mm9"
     }, 
-    "results": "/lab/work/porchard/atacseq", # (Optional) Path to the directory in which results should be placed (default is current working directory is used)
-    "libraries": { # (Required) this is where the information for each library is given
-        "100474___2156": { # unique ID for first library
+    "results": "/path/to/results", # (Optional) Path to the directory in which results should be placed (default is current working directory is used)
+    "libraries": { # (Required) this is where the information for the sequencing library is given
+        "WT_Sperm_IP_with_MS-H3k9me2#2": { # unique ID for first library
             "genome": "hg19", # genome for first library
             "readgroups": { # readgroups for first library
 			    # if the library was sequenced across several lanes, multiple readgroups
-			    # can be provided, and they will be merged after mapping and before duplicate marking/filtering
-			    # in this case, the library was sequenced across four lanes so four readgroups are provided.
-                "100474___L1___2156": [ # list of the 2 fastq files for the first lane
-                    "/path/to/data/fastq/100474_L001.1.fastq.gz", 
-                    "/path/to/data/fastq/100474_L001.2.fastq.gz"
-                ], 
-                "100474___L2___2156": [
-                    "/path/to/data/fastq/100474_L002.1.fastq.gz", 
-                    "/path/to/data/fastq/100474_L002.2.fastq.gz"
+			    # can be provided, and they will be merged after mapping and before duplicate marking/filtering.
+                "1619-SS-16": [
+                    "/path/to/data/fastq/1619-SS-16_CGGACAAC-AATCCGGA_S20_R1_001.fastq.gz",
+                    "/path/to/data/fastq/1619-SS-16_CGGACAAC-AATCCGGA_S20_R2_001.fastq.gz"
                 ]
             }
-        }, 
-        "100477___2156": { # second library begins here
-            "genome": "mm9", 
+        },
+	"WT_Sperm_Input": {
+            "genome": "mm10",
             "readgroups": {
-                "100477___L1___2156": [
-                    "/path/to/data/fastq/100477_L001.1.fastq.gz", 
-                    "/path/to/data/fastq/100477_L001.2.fastq.gz"
-                ], 
-                "100477___L2___2156": [
-                    "/path/to/data/fastq/100477_L002.1.fastq.gz", 
-                    "/path/to//data/fastq/100477_L002.2.fastq.gz"
+                "1619-SS-21": [
+                    "/path/to/data/fastq/1619-SS-21_ATGGCATG-GGTACCTT_S26_R1_001.fastq.gz",
+                    "/path/to/data/fastq/1619-SS-21_ATGGCATG-GGTACCTT_S26_R2_001.fastq.gz"
                 ]
             }
-        }, 
+        }
+
     }
 }
+```
+
+**IMPORTANT**: the basename for each fastq file must be unique.
+
+### build_snakefile.sh
+To make the process of assembling library data into the JSON config file, we supply a shell script, build_snakefile.sh, which can be found in the scripts directory. This script is run as follows:
+
+```bash
+bash scripts/build_snakefile.sh sampleInfo.tsv /path/to/fastq/data /path/to/results/directory genome /path/to/bwa/index snakemake_config.json
 
 ```
+
+You can substitute any filename you want for 'snakemake_config.json'
+
+Example files are given given in `examples/`.
+
+In case you are running on a cluster and need a cluster config file for
+Snakemake, a template cluster config can be found in `src/` as well.
 
 ## Credits
 This pipeline is based on the original Snakemake ATAC-seq pipeline developed by the Parker lab. The original version can be found here:
