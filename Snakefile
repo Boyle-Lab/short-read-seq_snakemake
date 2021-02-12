@@ -112,6 +112,12 @@ def get_bwa_index(genome):
 def get_autosomes(genome):
     return AUTOSOMAL_REFERENCES[genome]
 
+def get_all_chroms(genome):
+    """ Get all chromosomes, excluding chrM. """
+    tmp = AUTOSOMAL_REFERENCES[genome]
+    tmp.extend(["chrX", "chrY"])
+    return(tmp)
+
 
 # Now the pipeline itself
 
@@ -208,10 +214,15 @@ rule prune:
     params:
         tmp_dir = MD_DIR,
         mapq = 30,
-        autosomes = lambda wildcards: get_autosomes(get_genome('{}'.format(wildcards.library)))
+	chroms = lambda wildcards: get_all_chroms(get_genome('{}'.format(wildcards.library)))
     shell:
         """samtools view -b -h -f 3 -F 4 -F 8 -F 256 -F 1024 -F 2048 -q {params.mapq} {input.bam} {params.autosomes} > {output.bam}; samtools index {output.bam}"""
 
+rule linkbams:
+    input:
+        bam = os.path.join(PRUNE_DIR, '{library}.pruned.bam')
+    output:
+	bam = os.path.join(PRUNE_DIR, '{library}.pruned.bam')
 
 rule versions:
     output:

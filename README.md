@@ -97,6 +97,11 @@ Example files are given given in `examples/`.
 In case you are running on a cluster and need a cluster config file for
 Snakemake, a template cluster config can be found in `src/` as well.
 
+## Notes
+
+In the original pipeline from the Parker lab, only autosomal reads were carried through to peak calling and subsequent steps. This pipeline includes sex chromosomes in the filtered bam results.
+
+
 ## Credits
 This pipeline is based on the original Snakemake ATAC-seq pipeline developed by the Parker lab. The original version can be found here:
 <https://github.com/ParkerLab/ATACseq-Snakemake>
