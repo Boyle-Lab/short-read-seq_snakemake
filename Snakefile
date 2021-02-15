@@ -113,9 +113,11 @@ def get_autosomes(genome):
     return AUTOSOMAL_REFERENCES[genome]
 
 def get_all_chroms(genome):
-    """ Get all chromosomes, excluding chrM. """
+    """ Get all chromosomes, excluding chrM."""
     tmp = AUTOSOMAL_REFERENCES[genome]
-    tmp.extend(["chrX", "chrY"])
+    """ This is hacky and there is probably a better way..."""
+    if "chrX" not in tmp:
+        tmp.extend(["chrX", "chrY"])
     return(tmp)
 
 
