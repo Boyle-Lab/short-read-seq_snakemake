@@ -218,11 +218,13 @@ rule prune:
     shell:
         """samtools view -b -h -f 3 -F 4 -F 8 -F 256 -F 1024 -F 2048 -q {params.mapq} {input.bam} {params.autosomes} > {output.bam}; samtools index {output.bam}"""
 
+"""
 rule linkbams:
     input:
         bam = os.path.join(PRUNE_DIR, '{library}.pruned.bam')
     output:
 	bam = os.path.join(PRUNE_DIR, '{library}.pruned.bam')
+"""
 
 rule versions:
     output:
