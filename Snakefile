@@ -216,7 +216,7 @@ rule prune:
         mapq = 30,
 	chroms = lambda wildcards: get_all_chroms(get_genome('{}'.format(wildcards.library)))
     shell:
-        """samtools view -b -h -f 3 -F 4 -F 8 -F 256 -F 1024 -F 2048 -q {params.mapq} {input.bam} {params.autosomes} > {output.bam}; samtools index {output.bam}"""
+        """samtools view -b -h -f 3 -F 4 -F 8 -F 256 -F 1024 -F 2048 -q {params.mapq} {input.bam} {params.chroms} > {output.bam}; samtools index {output.bam}"""
 
 """
 rule linkbams:
