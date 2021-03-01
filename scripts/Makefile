@@ -10,10 +10,10 @@ CPUS=12
 
 NAME = 1619-SS
 
-SAMPLES = $$(for file in $$(ls ${BAMDIR}/*.rep*.pruned.bam | grep -v 'Input'); do basename $$file .pruned.bam; done)
-BAMFILES = $$(ls ${BAMDIR}/*.pruned.bam)
-SORTED_BAMS = $$(for file in $$(ls ${BAMDIR}/*.rep*.pruned.bam | grep -v 'Input'); do printf "%s.pruned.sorted.bam\n" $$(basename $$file .pruned.bam); done)
-SORTED_INPUT = $$(echo $$(for SAMPLE in $(SAMPLES); do ls $(BAMDIR)/$$(echo $$SAMPLE | awk -F '.' '{print $$1}').Input.*.pruned.bam | sed 's/pruned\.bam/pruned.sorted.bam/'; done) | sed 's/ /\n/g' | sort | uniq)
+SAMPLES = $$(cat ${SAMPLEINFO} | grep -v '^\#' | grep -v 'Input' | awk '{print $$3}' | tr -d '\r')
+BAMFILES = $$(for SAMPLE in $(SAMPLES); do echo ${BAMDIR}/$$SAMPLE.pruned.sorted.bam ; done)
+SORTED_BAMS = $$(for SAMPLE in $(SAMPLES); do echo ${BAMDIR}/$$SAMPLE.pruned.sorted.bam ; done)
+SORTED_INPUT = $$(echo $$(for SAMPLE in $(SAMPLES); do ls $(BAMDIR)/$$(echo $$SAMPLE | awk -F '.' '{print $$1}').Input.pruned.bam | sed 's/pruned\.bam/pruned.sorted.bam/'; done) | sed 's/ /\n/g' | sort | uniq)
 BW = $$(for sample in ${SAMPLES}; do printf "%s/%s.bw " ${BWDIR} $$sample; done)
 
 OTHERFILES = /data/projects/protamine/18342R/bigwig/P2V5_7-14-20.rep1.bw /data/projects/protamine/18342R/bigwig/P2V5_7-14-20.rep2.bw /data/projects/protamine/18342R/bigwig/P1V5_7-24-20.rep1.bw
